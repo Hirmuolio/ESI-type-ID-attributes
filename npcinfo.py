@@ -23,18 +23,18 @@ def check_error(esi_response, job):
 	return error
 
 def parse_stats(esi_response):
-	npc_Stats = esi_response.json()
+	npc_stats = esi_response.json()
 
 	#Check if it has attributes.
 	#If it does do the things
 	try:
-		length = len(npc_Stats['dogma_attributes'])
+		length = len(npc_stats['dogma_attributes'])
 	except KeyError:
-		print('Type ID',npc_Stats['type_id'],'has no attributes')
+		print('Type ID',npc_stats['type_id'],'has no attributes')
 		return
 
 	for n in range(0, length):
-		dogma_id = npc_Stats['dogma_attributes'][n]['attribute_id']
+		dogma_id = npc_stats['dogma_attributes'][n]['attribute_id']
 		if not str(dogma_id) in attributes:
 			#Find what this ID is for
 			print('Getting info on dogma attribute ID', dogma_id)
@@ -53,14 +53,14 @@ def parse_stats(esi_response):
 	#Print the output
 		
 	print('\n----')
-	print('Type ID:', npc_Stats['type_id'])
-	print('Name:', npc_Stats['name'])
+	print('Type ID:', npc_stats['type_id'])
+	print('Name:', npc_stats['name'])
 	print('----')
 	print('Attributes:')
 
 	for n in range(0, length):
-		dogma_id = npc_Stats['dogma_attributes'][n]['attribute_id']
-		value = npc_Stats['dogma_attributes'][n]['value']
+		dogma_id = npc_stats['dogma_attributes'][n]['attribute_id']
+		value = npc_stats['dogma_attributes'][n]['value']
 		name = attributes[str(dogma_id)][0]
 		display_name = attributes[str(dogma_id)][1]
 		description = attributes[str(dogma_id)][2]
@@ -88,7 +88,4 @@ while True:
 	
 	if not check_error(esi_response, 'get attributes for type ID'):
 		parse_stats(esi_response)
-	
-	
-	
 	
