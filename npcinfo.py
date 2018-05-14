@@ -1,9 +1,15 @@
-#This python script gets you attrinutes for any object
-
 #!/usr/bin/env python3
+
+#This python script gets you attributes for any object
 
 import requests
 import json
+
+#Uncomment the one you want to use.
+#TQ
+datasource ='tranquility&language=en-us'
+#SISI
+datasource ='singularity&language=en-us'
 
 def check_error(esi_response, job):
 	status_code = esi_response.status_code
@@ -38,7 +44,7 @@ def parse_stats(esi_response):
 		if not str(dogma_id) in attributes:
 			#Find what this ID is for
 			print('Getting info on dogma attribute ID', dogma_id)
-			url = "https://esi.tech.ccp.is/v1/dogma/attributes/"+str(dogma_id)+"/?datasource=tranquility"
+			url = "https://esi.tech.ccp.is/v1/dogma/attributes/"+str(dogma_id)+"/?datasource="+datasource
 			esi_response = requests.get(url)
 			
 			if not check_error(esi_response, 'get info on dogma attribute'):
@@ -48,7 +54,7 @@ def parse_stats(esi_response):
 			
 	#Save the ID list
 	with open('attributes.txt', 'w') as outfile:
-		json.dump(attributes, outfile)
+		json.dump(attributes, outfile, indent=4)
 
 	#Print the output
 		
@@ -79,10 +85,7 @@ while True:
 	#Call ESI
 	type_ID = input("Give type ID: ")
 
-	Url = "https://esi.tech.ccp.is/v3/universe/types/"+type_ID+"/?datasource=tranquility&language=en-us"
-
-	#Uncomment this to get SISI stats
-	#Url = "https://esi.tech.ccp.is/v3/universe/types/"+type_ID+"/?datasource=singularity&language=en-us"
+	Url = "https://esi.tech.ccp.is/v3/universe/types/"+type_ID+"/?datasource="+datasource
 
 	esi_response = requests.get(Url)
 	
