@@ -9,7 +9,7 @@ import json
 #TQ
 datasource ='tranquility&language=en-us'
 #SISI
-datasource ='singularity&language=en-us'
+#datasource ='singularity&language=en-us'
 
 def check_error(esi_response, job):
 	status_code = esi_response.status_code
