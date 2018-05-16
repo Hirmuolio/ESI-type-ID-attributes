@@ -36,7 +36,7 @@ def parse_stats(esi_response):
 	try:
 		length = len(npc_stats['dogma_attributes'])
 	except KeyError:
-		print('Type ID',npc_stats['type_id'],'has no attributes')
+		print('Type ID',npc_stats['type_id'],'-',npc_stats['name'],'-','has no attributes')
 		return
 
 	for n in range(0, length):
@@ -61,6 +61,7 @@ def parse_stats(esi_response):
 	print('\n----')
 	print('Type ID:', npc_stats['type_id'])
 	print('Name:', npc_stats['name'])
+	print('Description:', npc_stats['description'])
 	print('----')
 	print('Attributes:')
 
