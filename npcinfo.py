@@ -2,31 +2,15 @@
 
 #This python script gets you attributes for any object
 
-import requests
 import json
+
+import esi_calling
 
 #Uncomment the one you want to use.
 #TQ
-datasource ='tranquility&language=en-us'
+datasource ='tranquility'
 #SISI
-#datasource ='singularity&language=en-us'
-
-def check_error(esi_response, job):
-	status_code = esi_response.status_code
-	
-	if status_code != 200:
-		#Error
-		print('Failed to '+job+'. Error',esi_response.status_code,'-', esi_response.json()['error'])
-		error = True
-	else:
-		error = False
-		try:
-			#Try to print warning
-			print('Warning',esi_response.headers['warning'])
-		except KeyError:
-			warning = False
-	
-	return error
+#datasource ='singularity'
 
 def parse_stats(esi_response):
 	npc_stats = esi_response.json()
@@ -44,12 +28,11 @@ def parse_stats(esi_response):
 		if not str(dogma_id) in attributes:
 			#Find what this ID is for
 			print('Getting info on dogma attribute ID', dogma_id)
-			url = "https://esi.tech.ccp.is/v1/dogma/attributes/"+str(dogma_id)+"/?datasource="+datasource
-			esi_response = requests.get(url)
 			
-			if not check_error(esi_response, 'get info on dogma attribute'):
-				response_json = esi_response.json()
-				attributes[str(dogma_id)] = [ response_json['name'], response_json['display_name'], response_json['description'] ]
+			esi_response = esi_calling.call_esi(scope = '/v1/dogma/attributes/{par}', url_parameter = dogma_id, parameters={}, datasource = datasource, job = 'get info on dogma attribute')
+
+			response_json = esi_response.json()
+			attributes[str(dogma_id)] = [ response_json['name'], response_json['display_name'], response_json['description'] ]
 			
 			
 	#Save the ID list
@@ -84,12 +67,12 @@ except FileNotFoundError:
 
 while True:
 	#Call ESI
-	type_ID = input("Give type ID: ")
-
-	Url = "https://esi.tech.ccp.is/v3/universe/types/"+type_ID+"/?datasource="+datasource
-
-	esi_response = requests.get(Url)
+	type_id = input("Give type ID: ")
 	
-	if not check_error(esi_response, 'get attributes for type ID'):
+	esi_response = esi_calling.call_esi(scope = '/v3/universe/types/{par}', url_parameter = type_id, parameters={}, datasource = datasource, job = 'get type ID attributes')
+	
+	if esi_response.status_code == 404:
+		print('404 - Type ID: ' + type_id + ' not found')
+	else:
 		parse_stats(esi_response)
 	
