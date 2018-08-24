@@ -6,6 +6,8 @@ import json
 
 import esi_calling
 
+esi_calling.set_user_agent('Hirmuolio/ESI-type-ID-attributes')
+
 #Uncomment the one you want to use.
 #TQ
 datasource ='tranquility'
