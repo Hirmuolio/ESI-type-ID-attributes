@@ -19,10 +19,11 @@ esi_calling.set_user_agent('Hirmuolio/ESI-type-ID-attributes')
 	
 
 def print_normal_attributes(esi_response):
+	print('\nAttributes:\n')
 	type_info = esi_response.json()
 	for key in type_info:
 		if key not in ['dogma_attributes', 'dogma_effects', 'type_id', 'name', 'description']:
-			print( '{:<20s} {:<}'.format(key, type_info[key]))
+			print( '  {:<20s} {:<}'.format(key, type_info[key]))
 			#print(key, ': ', type_info[key])
 
 			
@@ -61,7 +62,7 @@ def print_dogma_attributes(esi_response):
 			name = dogma_attributes[str(dogma_id)]['name']
 			display_name = dogma_attributes[str(dogma_id)]['display_name']
 			description = dogma_attributes[str(dogma_id)]['description']
-			print( '{:<30s} {:<10s} {:<}{:<}'.format(name, str(value), '( '+display_name, ', '+description+' )'))
+			print( '  {:<30s} {:<10s} {:<}{:<}'.format(name, str(value), '( '+display_name, ', '+description+' )'))
 			
 			
 			
@@ -96,13 +97,13 @@ def print_dogma_effects(esi_response):
 			
 			name = dogma_effects[str(dogma_id)]['name']
 			
-			print(name)
+			print(' ', name)
 			for key in dogma_effects[str(dogma_id)]:
 				if key != 'name':
 					if dogma_effects[str(dogma_id)][key] == '':
-						print( '  ', key, ': ""' )
+						print( '   ', key, ': ""' )
 					else:
-						print( '  ', key, ': ', dogma_effects[str(dogma_id)][key] )
+						print( '   ', key, ': ', dogma_effects[str(dogma_id)][key] )
 			
 			#display_name = dogma_effects[str(dogma_id)]['display_name']
 			#description = dogma_effects[str(dogma_id)]['description']
@@ -113,11 +114,10 @@ def parse_stats(esi_response):
 	#Print the output
 		
 	print('\n----')
-	print('Type ID:', type_info['type_id'])
-	print('Name:', type_info['name'])
-	print('Description:', type_info['description'])
+	print('  Type ID:', type_info['type_id'])
+	print('  Name:', type_info['name'])
+	print('  Description:', type_info['description'])
 	
-	print('\nAttributes:\n')
 	print_normal_attributes(esi_response)
 	
 	print_dogma_attributes(esi_response)
