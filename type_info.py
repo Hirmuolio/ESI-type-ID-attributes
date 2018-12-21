@@ -142,6 +142,8 @@ except FileNotFoundError:
 	#No file found. Start from scratch
     dogma_effects = {}
 
+print('Using', datasource, 'as data source')
+	
 while True:
 	#Call ESI
 	type_id = input("Give type ID: ")
