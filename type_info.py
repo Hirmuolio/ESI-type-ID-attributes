@@ -50,7 +50,8 @@ def print_dogma_attributes(esi_response):
 				
 			for array in esi_response_arrays:
 				response_json = array[0].json()
-				dogma_attributes[str(response_json['attribute_id'])] = response_json #[ response_json['name'], response_json['display_name'], response_json['description'] ]
+				if 'attribute_id' in response_json:
+					dogma_attributes[str(response_json['attribute_id'])] = response_json
 			#Save the ID list
 			with gzip.GzipFile('dogma_attributes.gz', 'w') as outfile:
 				outfile.write(json.dumps(dogma_attributes, indent=2).encode('utf-8'))
@@ -59,10 +60,13 @@ def print_dogma_attributes(esi_response):
 		for n in range(0, length):
 			dogma_id = type_info['dogma_attributes'][n]['attribute_id']
 			value = type_info['dogma_attributes'][n]['value']
-			name = dogma_attributes[str(dogma_id)]['name']
-			display_name = dogma_attributes[str(dogma_id)]['display_name']
-			description = dogma_attributes[str(dogma_id)]['description']
-			print( '  {:<30s} {:<10s} {:<}{:<}'.format(name, str(value), '( '+display_name, ', '+description+' )'))
+			if str(dogma_id) in dogma_attributes:
+				name = dogma_attributes[str(dogma_id)]['name']
+				display_name = dogma_attributes[str(dogma_id)]['display_name']
+				description = dogma_attributes[str(dogma_id)]['description']
+				print( '  {:<30s} {:<10s} {:<}{:<}'.format(name, str(value), '( '+display_name, ', '+description+' )'))
+			else:
+				print( "Unknown dogma ID ", str(dogma_id) )
 			
 			
 			
@@ -87,7 +91,8 @@ def print_dogma_effects(esi_response):
 				
 			for array in esi_response_arrays:
 				response_json = array[0].json()
-				dogma_effects[str(response_json['effect_id'])] = response_json
+				if 'effect_id' in response_json:
+					dogma_effects[str(response_json['effect_id'])] = response_json
 			#Save the ID list
 			with gzip.GzipFile('dogma_effects.gz', 'w') as outfile:
 				outfile.write(json.dumps(dogma_effects, indent=2).encode('utf-8'))
@@ -95,19 +100,20 @@ def print_dogma_effects(esi_response):
 		for n in range(0, length):
 			dogma_id = type_info['dogma_effects'][n]['effect_id']
 			
-			name = dogma_effects[str(dogma_id)]['name']
-			
-			print(' ', name)
-			for key in dogma_effects[str(dogma_id)]:
-				if key != 'name':
-					if dogma_effects[str(dogma_id)][key] == '':
-						print( '   ', key, ': ""' )
-					else:
-						print( '   ', key, ': ', dogma_effects[str(dogma_id)][key] )
-			
-			#display_name = dogma_effects[str(dogma_id)]['display_name']
-			#description = dogma_effects[str(dogma_id)]['description']
-			#print( '{:<30s} {:<}{:<}'.format(name, '( '+display_name, ', '+description+' )'))
+			if dogma_id in dogma_effects:
+				name = dogma_effects[str(dogma_id)]['name']
+				
+				print(' ', name)
+				for key in dogma_effects[str(dogma_id)]:
+					if key != 'name':
+						if dogma_effects[str(dogma_id)][key] == '':
+							print( '   ', key, ': ""' )
+						else:
+							print( '   ', key, ': ', dogma_effects[str(dogma_id)][key] )
+			else:
+				print( "Unknown dogma effect ", dogma_id )
+
+
 
 def parse_stats(esi_response):
 	type_info = esi_response.json()
