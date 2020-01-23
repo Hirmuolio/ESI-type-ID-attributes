@@ -93,6 +93,8 @@ def print_dogma_effects(esi_response):
 				response_json = array[0].json()
 				if 'effect_id' in response_json:
 					dogma_effects[str(response_json['effect_id'])] = response_json
+				else:
+					print( "Something wrong: ", response_json )
 			#Save the ID list
 			with gzip.GzipFile('dogma_effects.gz', 'w') as outfile:
 				outfile.write(json.dumps(dogma_effects, indent=2).encode('utf-8'))
@@ -100,7 +102,7 @@ def print_dogma_effects(esi_response):
 		for n in range(0, length):
 			dogma_id = type_info['dogma_effects'][n]['effect_id']
 			
-			if dogma_id in dogma_effects:
+			if str( dogma_id ) in dogma_effects:
 				name = dogma_effects[str(dogma_id)]['name']
 				
 				print(' ', name)
