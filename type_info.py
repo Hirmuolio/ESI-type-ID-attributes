@@ -104,17 +104,33 @@ def print_dogma_effects(esi_response):
 				
 		for n in range(0, length):
 			dogma_id = type_info['dogma_effects'][n]['effect_id']
-			
+			print(' ')
 			if str( dogma_id ) in dogma_effects:
 				name = dogma_effects[str(dogma_id)]['name']
 				
 				print(' ', name)
 				for key in dogma_effects[str(dogma_id)]:
-					if key != 'name':
-						if dogma_effects[str(dogma_id)][key] == '':
-							print( '   ', key, ': ""' )
-						else:
-							print( '   ', key, ': ', dogma_effects[str(dogma_id)][key] )
+					if key == "modifiers":
+						print( "    modifiers:" )
+						for arr_element in dogma_effects[str(dogma_id)]["modifiers"]:
+							for key2 in arr_element:
+								if key2 in [ "modified_attribute_id", "modifying_attribute_id" ]:
+									attr_id = arr_element[key2]
+									if not str(attr_id) in dogma_attributes:
+										#Find what this ID is for
+										esi_response = esi_calling.call_esi(scope = '/v1/dogma/attributes/{par}', url_parameters = [str(attr_id)], job = 'get info on dogma attribute')[0][0]
+										response_json = esi_response.json()
+										if 'attribute_id' in response_json:
+											dogma_attributes[str(response_json['attribute_id'])] = response_json
+										#Save the ID list
+										with gzip.GzipFile('dogma_attributes.gz', 'w') as outfile:
+											outfile.write(json.dumps(dogma_attributes, indent=2).encode('utf-8'))
+									print( "     ", key2, ":", dogma_attributes[ str(attr_id) ]["name"] )
+								else:
+									print( "     ", key2, ":", arr_element[key2] )
+								
+					else:
+						print( '   ', key, ': ', dogma_effects[str(dogma_id)][key] )
 			else:
 				print( "Unknown dogma effect ", dogma_id )
 
