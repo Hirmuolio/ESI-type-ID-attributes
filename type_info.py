@@ -63,7 +63,10 @@ def print_dogma_attributes(esi_response):
 			if str(dogma_id) in dogma_attributes:
 				name = dogma_attributes[str(dogma_id)]['name']
 				display_name = dogma_attributes[str(dogma_id)]['display_name']
-				description = dogma_attributes[str(dogma_id)]['description']
+				if 'description' in dogma_attributes[str(dogma_id)]:
+					description = dogma_attributes[str(dogma_id)]['description']
+				else:
+					description = ""
 				print( '  {:<30s} {:<10s} {:<}{:<}'.format(name, str(value), '( '+display_name, ', '+description+' )'))
 			else:
 				print( "Unknown dogma ID ", str(dogma_id) )
