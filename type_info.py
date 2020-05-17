@@ -125,7 +125,7 @@ def print_dogma_effects(esi_response):
 										#Save the ID list
 										with gzip.GzipFile('dogma_attributes.gz', 'w') as outfile:
 											outfile.write(json.dumps(dogma_attributes, indent=2).encode('utf-8'))
-									print( "     ", key2, ":", dogma_attributes[ str(attr_id) ]["name"] )
+									print( "     ", key2, ":", str(attr_id), "-", dogma_attributes[ str(attr_id) ]["name"] )
 								else:
 									print( "     ", key2, ":", arr_element[key2] )
 					elif key in [ "discharge_attribute_id", "duration_attribute_id", "falloff_attribute_id", "tracking_speed_attribute_id", "range_attribute_id"]:
