@@ -128,7 +128,16 @@ def print_dogma_effects(esi_response):
 									print( "     ", key2, ":", dogma_attributes[ str(attr_id) ]["name"] )
 								else:
 									print( "     ", key2, ":", arr_element[key2] )
-								
+					elif key in [ "discharge_attribute_id", "duration_attribute_id", "falloff_attribute_id", "tracking_speed_attribute_id", "range_attribute_id"]:
+						if not str(dogma_effects[str(dogma_id)][key]) in dogma_attributes:
+							esi_response = esi_calling.call_esi(scope = '/v1/dogma/attributes/{par}', url_parameters = [str(dogma_effects[str(dogma_id)][key])], job = 'get info on dogma attribute')[0][0]
+							response_json = esi_response.json()
+							if 'attribute_id' in response_json:
+								dogma_attributes[str(response_json['attribute_id'])] = response_json
+							#Save the ID list
+							with gzip.GzipFile('dogma_attributes.gz', 'w') as outfile:
+								outfile.write(json.dumps(dogma_attributes, indent=2).encode('utf-8'))
+						print( '   ', key, ': ', dogma_effects[str(dogma_id)][key], "-", dogma_attributes[str(dogma_effects[str(dogma_id)][key])]["name"] )
 					else:
 						print( '   ', key, ': ', dogma_effects[str(dogma_id)][key] )
 			else:
